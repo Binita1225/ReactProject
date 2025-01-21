@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff; /* Light blue background */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#container {
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+#inpForm {
+    margin-bottom: 20px;
+}
+
+#inpForm h2 {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+.form{
+    display: flex;
+}
+
+#inpField {
+    width: calc(100% - 90px); /* Leave space for the button */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: inline-block;
+    margin-right: 10px; /* Space between input and button */
+}
+
+#addBtn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block;
+}
+
+#addBtn:hover {
+    background-color: #45a049;
+}
+
+#listItem li {
+    background-color: #f9f9f9;
+    padding: 10px 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+}
+
+#listItem li button {
+    background-color: #008cba;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 5px;
+    transition: background-color 0.3s;
+}
+
+#listItem li button:hover {
+    background-color: #007bb5;
+}
+
+#listItem li button.delete-btn {
+    background-color: #f44336;
+}
+
+#listItem li button.done-btn {
+    background-color: #4caf50;
+}
+
+#listItem li button.done-btn:hover {
+    background-color: #45a049;
+}
