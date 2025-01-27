@@ -1,30 +1,60 @@
-const Content = () => {
-  const handleNameChange = () => {
-    const names = ["Bob", "Kevin", "Dave"];
-    const int = Math.floor(Math.random() * 3);
-    return names[int];
-  };
+import ItemList from "./ItemList";
 
-  const handleClick = () => {
-    console.log("you clicked it");
-  };
+interface Items {
+  id: number;
+  checked: boolean;
+  item: string;
+}
 
-  const handleClick2 = (name) => {
-    console.log(` ${name} was clicked`);
-  };
+const Content = ({
+  items,
+  handleCheck,
+  handleDelete,
+}: {
+  items: Items[];
+  handleCheck: (id?: any) => void;
+  handleDelete: (id?: any) => void;
+}) => {
+  // const [count, setCount] = useState(0);
 
-  const handleClick3 = (e) => {
-    console.log(e.target.innerText);
-  };
+  // const handleNameChange = () => {
+  //   const names = ["Bob", "Kevin", "Dave"];
+  //   const int = Math.floor(Math.random() * 3);
+  //   setName(names[int]);
+  // };
+
+  // const handleClick = () => {
+  //   setCount(count + 1);
+  //   setCount(count + 1);
+  //   console.log(count);
+  // };
+
+  // const handleClick2 = () => {
+  //   console.log(count);
+  // };
+
+  // const handleClick3 = (e) => {
+  //   console.log(e.target.innerText);
+  // };
 
   return (
     <main>
-      <p onDoubleClick={handleClick}>Hello {handleNameChange()}</p>
+      {/* <p onDoubleClick={handleClick}>Hello {name}</p>
+      <button onClick={handleNameChange}>change name</button>
+      <br />
       <button onClick={handleClick}>Click it</button>
       <br />
-      <button onClick={() => handleClick2("abc")}>Click it</button>
-      <br />
-      <button onClick={(e) => handleClick3(e)}>Click it</button>
+      <button onClick={handleClick2}>Click it</button> */}
+
+      {items.length ? (
+        <ItemList
+          items={items}
+          handleCheck={handleCheck}
+          handleDelete={handleDelete}
+        />
+      ) : (
+        <p style={{ marginTop: "2rem" }}>Your list is empty</p>
+      )}
     </main>
   );
 };
