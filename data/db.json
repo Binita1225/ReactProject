@@ -2,8 +2,13 @@
   "items": [
     {
       "id": "4",
-      "checked": true,
+      "checked": false,
       "item": "stupid binita"
+    },
+    {
+      "id": "41",
+      "checked": false,
+      "item": "chips"
     }
   ]
 }

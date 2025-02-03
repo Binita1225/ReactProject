@@ -2,11 +2,15 @@ import LineItem from "./LineItem";
 
 interface Items {
   id: number;
-  checked: boolean;
-  item: string;
+  isComplete: boolean;
+  name: string;
 }
 
-const ItemList = ({ items, handleCheck, handleDelete }: {
+const ItemList = ({
+  items,
+  handleCheck,
+  handleDelete,
+}: {
   items: Items[];
   handleCheck: (id?: any) => void;
   handleDelete: (id?: any) => void;

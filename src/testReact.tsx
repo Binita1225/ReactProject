@@ -10,7 +10,7 @@ import apiRequest from "./apiRequest";
 function Test() {
   // const name = "abc";
 
-  const API_URL = "http://localhost:3500/items";
+  const API_URL = "https://localhost:7121/api/TodoItemApi";
 
   const [items, setItems] = useState([]);
 
@@ -21,79 +21,173 @@ function Test() {
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(items, "jhgfdasdfghj");
+
   useEffect(() => {
     // localStorage.setItem("shoppingList", JSON.stringify(items));
     const fetchItems = async () => {
       try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw Error("did not received expected data");
+        console.log("Fetching from:", API_URL); // Debugging
+
+        const response = await fetch(API_URL, {
+          mode: "cors",
+        });
+
+        console.log("Response Status:", response.status); // Debugging
+
+        if (!response.ok) throw Error(`HTTP Error! Status: ${response.status}`);
+
         const listItems = await response.json();
-        // console.log(listItems);
+        console.log("Fetched Data:", listItems); // Debugging
+
         setItems(listItems);
         setFetchError(null);
-      } catch (err) {
-        // console.log(err.message);
+      } catch (err: any) {
+        console.error("Fetch Error:", err.message);
         setFetchError(err.message);
       } finally {
         setIsLoading(false);
       }
     };
 
-    setTimeout(() => {
-      (async () => await fetchItems())();
-    }, 2000);
-  }, []);
+    // setTimeout(() => {
+    //   (async () => await fetchItems())();
+    // }, 2000);
+    fetchItems();
+  }, [API_URL]);
+  console.log(fetchError, "err");
 
   // const setAndSaveItems = (newItems) => {
   //   setItems(newItems);
   // };
 
-  const addItem = async (item) => {
-    const id = items.length ? items[items.length - 1].id + 1 : 1;
-    const myNewItem = { id, checked: false, item };
-    const listItems = [...items, myNewItem];
-    setItems(listItems);
+  // const addItem = async (item: any) => {
+  //   const id = items.length ? items[items.length - 1].id + 1 : 1;
+  //   const myNewItem = { id, isComplete: false, name: item };
+  //   const listItems = [...items, myNewItem];
+  //   setItems(listItems);
 
-    const postOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(myNewItem),
-    };
-    const result = await apiRequest(API_URL, postOptions);
-    if (result) setFetchError(result);
+  //   const postOptions = {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(myNewItem),
+  //   };
+  //   const result = await apiRequest(API_URL, postOptions);
+  //   if (result) setFetchError(result);
+  // };
+
+  const addItem = async (item: string) => {
+    try {
+      const id = items.length ? items[items.length - 1].id + 1 : 1;
+      const myNewItem = { id, isComplete: false, name: item };
+      setItems((prevItems) => [...prevItems, myNewItem]);
+
+      const postOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(myNewItem),
+      };
+
+      const response = await apiRequest(API_URL, postOptions);
+      console.log(response);
+
+      // if (response && response.status === "Success") {
+
+      // } else {
+
+      //   setItems((prevItems) =>
+      //     prevItems.filter((item) => item.id !== myNewItem.id)
+      //   );
+      //   setFetchError("Failed to add item.");
+      // }
+    } catch (error) {
+      setFetchError("An error occurred while adding the item.");
+    }
   };
 
-  const handleCheck = async (id?: any) => {
-    const listItems = items.map((item) =>
-      item.id === id ? { ...item, checked: !item?.checked } : item
-    );
-    setItems(listItems);
+  // const handleCheck = async (id?: any) => {
+  //   const listItems = items.map((item) =>
+  //     item.id === id ? { ...item, isComplete: !item?.isComplete } : item
+  //   );
+  //   setItems(listItems);
 
-    const myItem = listItems.filter((item) => item.id === id);
+  //   const myItem = listItems.find((item) => item.id === id);
+  //   if (!myItem) return;
 
-    const updateOptions = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ checked: myItem[0].checked }),
-    };
+  //   const updateOptions = {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ isComplete: myItem.isComplete }), //Send object
+  //   };
 
-    const reqUrl = `${API_URL}/${id}`;
-    const result = await apiRequest(reqUrl, updateOptions);
-    if (result) setFetchError(result);
+  //   const reqUrl = `${API_URL}/${id}`;
+  //   const result = await apiRequest(reqUrl, updateOptions);
+  //   if (result) setFetchError(result);
+  // };
+
+  const handleCheck = async (id: number) => {
+    try {
+      const updatedItem = items.find((item) => item.id === id);
+      if (!updatedItem) return;
+
+      const updatedIsComplete = !updatedItem.isComplete;
+
+      const updateOptions = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isComplete: updatedIsComplete }),
+      };
+
+      const reqUrl = `${API_URL}/${id}`;
+      const response = await apiRequest(reqUrl, updateOptions);
+
+      if (response.status == "Success") {
+        const updatedItems = items.map((item) =>
+          item.id === id ? { ...item, isComplete: updatedIsComplete } : item
+        );
+        setItems(updatedItems);
+      } else {
+        setFetchError("Failed to update item");
+      }
+    } catch (error) {
+      setFetchError("An error occurred while updating the item.");
+    }
   };
+
+  // const handleDelete = async (id?: any) => {
+  //   const listItems = items.filter((item) => item.id !== id);
+  //   setItems(listItems);
+
+  //   const deleteOptions = { method: "DELETE" };
+  //   const reqUrl = `${API_URL}/${id}`;
+  //   const result = await apiRequest(reqUrl, deleteOptions);
+  //   console.log(result);
+  //   if (result) setFetchError(result);
+  // };
 
   const handleDelete = async (id?: any) => {
-    const listItems = items.filter((item) => item.id !== id);
-    setItems(listItems);
+    try {
+      const listItems = items.filter((item) => item.id !== id);
+      setItems(listItems);
 
-    const deleteOptions = { method: "DELETE" };
-    const reqUrl = `${API_URL}/${id}`;
-    const result = await apiRequest(reqUrl, deleteOptions);
-    if (result) setFetchError(result);
+      const deleteOptions = { method: "DELETE" };
+      const reqUrl = `${API_URL}/${id}`;
+      const result = await apiRequest(reqUrl, deleteOptions);
+      console.log(result);
+
+      if (result && result.status !== "Success") {
+        setFetchError(result.message || "Failed to delete item.");
+      }
+    } catch (error) {
+      setFetchError("An error occurred while deleting the item.");
+      console.error("Delete Error:", error);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -120,7 +214,7 @@ function Test() {
         {!fetchError && !isLoading && (
           <Content
             items={items.filter((item) =>
-              item?.item?.toLowerCase().includes(search.toLowerCase())
+              item?.name?.toLowerCase().includes(search.toLowerCase())
             )}
             handleCheck={handleCheck}
             handleDelete={handleDelete}

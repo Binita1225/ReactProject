@@ -6,13 +6,13 @@ const LineItem = ({ item, handleCheck, handleDelete }: any) => {
       <input
         type="checkbox"
         onChange={() => handleCheck(item.id)}
-        checked={item.checked}
+        checked={item.isComplete}
       />
       <label
-        style={item.checked ? { textDecoration: "line-through" } : null}
+        style={item.isComplete ? { textDecoration: "line-through" } : null}
         onDoubleClick={() => handleCheck(item.id)}
       >
-        {item.item}
+        {item.name}
       </label>
       <FaTrashAlt
         onClick={() => handleDelete(item.id)}

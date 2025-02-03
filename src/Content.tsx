@@ -36,7 +36,6 @@ const Content = ({
   // const handleClick3 = (e) => {
   //   console.log(e.target.innerText);
   // };
-
   return (
     <>
       {/* <p onDoubleClick={handleClick}>Hello {name}</p>
